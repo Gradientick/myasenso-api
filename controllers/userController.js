@@ -1,17 +1,23 @@
-async function getUsers(_req, res) {
-  res.send("Users Resource");
-}
+import bcrypt from "bcrypt";
+import User from "../models/User.js";
 
-async function deleteUser(_req, res) {
-  res.send("Users Resource");
-}
+async function createNewUser(req, res) {
+  const { name, email, number, password } = req.body;
+  const saltRounds = 10;
+  const passwordHash = await bcrypt.hash(password, saltRounds);
 
-async function createNewUser(_req, res) {
-  res.send("Users Resource");
+  const user = new User({
+    name,
+    email,
+    number,
+    passwordHash,
+  });
+
+  const savedUser = await user.save();
+
+  return res.status(201).json(savedUser);
 }
 
 export default {
-  getUsers,
-  deleteUser,
   createNewUser,
 };

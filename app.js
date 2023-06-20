@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 import cors from "cors";
 import config from "./utils/config.js";
 import userRouter from "./Routes/userRouter.js";
+import itemsRouter from "./Routes/itemsRouter.js";
+import nameRouter from "./Routes/nameRouter.js";
+
 const app = express();
 
 const connectToDB = async (url) => {
@@ -17,4 +20,6 @@ app.use(express.json());
 app.use(express.static("dist"));
 
 app.use("/api/users", userRouter);
+app.use("/api/items", itemsRouter);
+app.use("/api/name", nameRouter);
 export default app;
