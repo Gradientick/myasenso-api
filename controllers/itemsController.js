@@ -1,5 +1,5 @@
 import Item from "../models/Item.js";
-
+import User from "../models/User.js";
 async function getItems(req, res) {
   const items = await Item.find({});
 
@@ -7,17 +7,21 @@ async function getItems(req, res) {
 }
 
 async function postItem(req, res) {
-  const { image, name, price, quantity } = req.body;
+  const { image, name, price, quantity, userId } = req.body;
+
+  const user = await User.findById(userId);
 
   const item = new Item({
     image,
     name,
     price,
     quantity,
+    user: user.id,
   });
 
   const savedItem = await item.save();
-
+  user.items = user.items.concat(savedItem._id);
+  await user.save();
   return res.status(201).json(savedItem);
 }
 

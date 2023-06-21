@@ -1,6 +1,9 @@
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
-
+async function getUsers(req, res) {
+  const users = await User.find({}).populate("items");
+  return res.status(200).json(users);
+}
 async function createNewUser(req, res) {
   const { name, email, number, password } = req.body;
   const saltRounds = 10;
@@ -20,4 +23,5 @@ async function createNewUser(req, res) {
 
 export default {
   createNewUser,
+  getUsers,
 };
