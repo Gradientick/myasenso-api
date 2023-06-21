@@ -1,5 +1,8 @@
 import Item from "../models/Item.js";
 import User from "../models/User.js";
+import getTokenFrom from "../utils/getTokenFrom.js";
+import jwt from "jsonwebtoken";
+import config from "../utils/config.js";
 async function getItems(req, res) {
   const items = await Item.find({});
 
@@ -7,16 +10,21 @@ async function getItems(req, res) {
 }
 
 async function postItem(req, res) {
-  const { image, name, price, quantity, userId } = req.body;
+  const { image, name, price, quantity } = req.body;
+  const decodedToken = jwt.verify(getTokenFrom(req), config.SECRET);
 
-  const user = await User.findById(userId);
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: "token missing or invalid" });
+  }
+
+  const user = await User.findById(decodedToken.id);
 
   const item = new Item({
     image,
     name,
     price,
     quantity,
-    user: user.id,
+    user: user._id,
   });
 
   const savedItem = await item.save();
