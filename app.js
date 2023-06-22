@@ -6,6 +6,7 @@ import userRouter from "./Routes/userRouter.js";
 import itemsRouter from "./Routes/itemsRouter.js";
 import nameRouter from "./Routes/nameRouter.js";
 import loginRouter from "./Routes/loginRouter.js";
+import errorHandler from "./middlewares/errorHandler.js";
 
 const app = express();
 
@@ -24,4 +25,6 @@ app.use("/api/users", userRouter);
 app.use("/api/items", itemsRouter);
 app.use("/api/name", nameRouter);
 app.use("/api/login", loginRouter);
+app.use(errorHandler);
+
 export default app;

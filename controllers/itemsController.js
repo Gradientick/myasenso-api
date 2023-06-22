@@ -3,15 +3,17 @@ import User from "../models/User.js";
 import getTokenFrom from "../utils/getTokenFrom.js";
 import jwt from "jsonwebtoken";
 import config from "../utils/config.js";
+
 async function getItems(req, res) {
   const items = await Item.find({});
 
   return res.status(200).json(items);
 }
 
-async function postItem(req, res) {
-  const { image, name, price, quantity } = req.body;
-  const decodedToken = jwt.verify(getTokenFrom(req), config.SECRET);
+async function postItem(req, res, next) {
+  try {
+    const { image, name, price, quantity } = req.body;
+    const decodedToken = jwt.verify(getTokenFrom(req), config.SECRET);
 
   if (!decodedToken.id) {
     return res.status(401).json({ error: "token missing or invalid" });
@@ -31,6 +33,9 @@ async function postItem(req, res) {
   user.items = user.items.concat(savedItem._id);
   await user.save();
   return res.status(201).json(savedItem);
+  } catch (error) {
+    next(error);
+  }
 }
 
 async function deleteItem(req, res) {
