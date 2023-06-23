@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
       ref: "Item",
     },
   ],
+  title: String,
 });
 userSchema.plugin(uniqueValidator);
 userSchema.set("toJSON", {

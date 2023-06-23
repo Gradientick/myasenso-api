@@ -5,7 +5,7 @@ async function getUsers(req, res) {
   return res.status(200).json(users);
 }
 async function createNewUser(req, res) {
-  const { name, email, number, password } = req.body;
+  const { name, email, number, password, title } = req.body;
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
 
@@ -13,6 +13,7 @@ async function createNewUser(req, res) {
     name,
     email,
     number,
+    title,
     passwordHash,
   });
 
