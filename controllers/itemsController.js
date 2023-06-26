@@ -5,7 +5,8 @@ import jwt from "jsonwebtoken";
 import config from "../utils/config.js";
 
 async function getItems(req, res) {
-  const items = await Item.find({});
+  const decodedToken = jwt.verify(getTokenFrom(req), config.SECRET);
+  const items = await Item.find({ user: decodedToken.id });
 
   return res.status(200).json(items);
 }
@@ -15,24 +16,24 @@ async function postItem(req, res, next) {
     const { image, name, price, quantity } = req.body;
     const decodedToken = jwt.verify(getTokenFrom(req), config.SECRET);
 
-  if (!decodedToken.id) {
-    return res.status(401).json({ error: "token missing or invalid" });
-  }
+    if (!decodedToken.id) {
+      return res.status(401).json({ error: "token missing or invalid" });
+    }
 
-  const user = await User.findById(decodedToken.id);
+    const user = await User.findById(decodedToken.id);
 
-  const item = new Item({
-    image,
-    name,
-    price,
-    quantity,
-    user: user._id,
-  });
+    const item = new Item({
+      image,
+      name,
+      price,
+      quantity,
+      user: user._id,
+    });
 
-  const savedItem = await item.save();
-  user.items = user.items.concat(savedItem._id);
-  await user.save();
-  return res.status(201).json(savedItem);
+    const savedItem = await item.save();
+    user.items = user.items.concat(savedItem._id);
+    await user.save();
+    return res.status(201).json(savedItem);
   } catch (error) {
     next(error);
   }
