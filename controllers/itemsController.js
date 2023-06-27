@@ -13,6 +13,17 @@ async function getItems(req, res) {
   return res.status(200).json(items);
 }
 
+async function getItem(req, res, next) {
+  try {
+    const id = req.params.id;
+    const item = await Item.findById(id);
+    return res.status(200).json(item);
+  } catch (error) {
+    next(error);
+    return res.status(404).json({ error: "item not found" });
+  }
+}
+
 async function postItem(req, res, next) {
   try {
     const { image, name, price, quantity } = req.body;
@@ -76,4 +87,5 @@ export default {
   postItem,
   deleteItem,
   editItem,
+  getItem,
 };
