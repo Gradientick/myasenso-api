@@ -24,7 +24,9 @@ async function login(req, res, next) {
 
     const token = jwt.sign(userForToken, config.SECRET, { expiresIn: 60 * 60 });
 
-    res.status(200).send({ token, email: user.email, name: user.name });
+    res
+      .status(200)
+      .send({ token, email: user.email, name: user.name, title: user.title });
   } catch (error) {
     next(error);
   }

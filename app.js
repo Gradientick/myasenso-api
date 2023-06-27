@@ -23,7 +23,7 @@ app.use(express.static("dist"));
 
 app.use("/api/users", userRouter);
 app.use("/api/items", itemsRouter);
-app.use("/api/name", nameRouter);
+app.use("/api/users/name", nameRouter);
 app.use("/api/login", loginRouter);
 app.use(errorHandler);
 

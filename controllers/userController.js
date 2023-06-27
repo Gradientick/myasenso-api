@@ -4,6 +4,19 @@ async function getUsers(req, res) {
   const users = await User.find({}).populate("items");
   return res.status(200).json(users);
 }
+
+async function getSpecificUser(req, res) {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+
+    if (user) return res.status(200).json(user);
+
+    return res.status(404).json({ message: "User not found" });
+  } catch (error) {
+    next(error);
+  }
+}
 async function createNewUser(req, res) {
   const { name, email, number, password, title } = req.body;
   const saltRounds = 10;
@@ -25,4 +38,5 @@ async function createNewUser(req, res) {
 export default {
   createNewUser,
   getUsers,
+  getSpecificUser,
 };

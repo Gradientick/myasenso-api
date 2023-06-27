@@ -22,6 +22,10 @@ const itemSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  photoInfo: {
+    url: String,
+    filename: String,
+  },
 });
 
 itemSchema.set("toJSON", {
