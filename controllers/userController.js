@@ -22,18 +22,23 @@ async function createNewUser(req, res) {
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
 
-  const user = new User({
-    name,
-    email,
-    number,
-    title,
-    passwordHash,
-  });
+  const existEmail = await User.findOne({email}); // Validate if email is already in use
+  if (existEmail) {
+    return res.status(400).json({error: "Email already in use!"});
+  } else {
+    const user = new User({
+      name,
+      email,
+      number,
+      title,
+      passwordHash,
+    });
 
-  const savedUser = await user.save();
+    const savedUser = await user.save();
 
-  return res.status(201).json(savedUser);
-}
+    return res.status(201).json(savedUser);
+  }
+};
 
 export default {
   createNewUser,
