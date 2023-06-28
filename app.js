@@ -2,10 +2,10 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import config from "./utils/config.js";
-import userRouter from "./Routes/userRouter.js";
-import itemsRouter from "./Routes/itemsRouter.js";
-import nameRouter from "./Routes/nameRouter.js";
-import loginRouter from "./Routes/loginRouter.js";
+import userRouter from "./routes/userRouter.js";
+import itemsRouter from "./routes/itemsRouter.js";
+import nameRouter from "./routes/nameRouter.js";
+import loginRouter from "./routes/loginRouter.js";
 import errorHandler from "./middlewares/errorHandler.js";
 
 const app = express();

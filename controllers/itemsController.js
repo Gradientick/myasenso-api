@@ -69,17 +69,15 @@ async function deleteItem(req, res) {
 
 async function editItem(req, res) {
   const id = req.params.id;
-  const { image, name, price, quantity } = req.body;
-  const item = {
-    image,
-    name,
-    price,
-    quantity,
-  };
+  const newItemData = { ...req.body };
 
-  const updatedItem = await Item.findByIdAndUpdate(id, item, { new: true });
+  const updatedItem = await Item.findByIdAndUpdate(
+    id,
+    { ...newItemData },
+    { new: true }
+  );
 
-  res.json(updatedItem);
+  return res.json(updatedItem);
 }
 
 export default {
