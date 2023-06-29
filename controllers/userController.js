@@ -17,22 +17,34 @@ async function getSpecificUser(req, res) {
     next(error);
   }
 }
-async function createNewUser(req, res) {
-  const { name, email, number, password, title } = req.body;
-  const saltRounds = 10;
-  const passwordHash = await bcrypt.hash(password, saltRounds);
+async function createNewUser(req, res, next) {
+  try {
+    const { name, email, number, password, title } = req.body;
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
 
-  const user = new User({
-    name,
-    email,
-    number,
-    title,
-    passwordHash,
-  });
+    const user = new User({
+      name,
+      email,
+      number,
+      title,
+      passwordHash,
+    });
 
-  const savedUser = await user.save();
+    const existingUser = await User.findOne({ email });
 
-  return res.status(201).json(savedUser);
+    if (existingUser) {
+      return res.status(401).json({
+        error: "email already exists",
+      });
+    }
+
+    const savedUser = await user.save();
+
+    return res.status(201).json(savedUser);
+  } catch (error) {
+    next(error);
+  }
 }
 
 export default {

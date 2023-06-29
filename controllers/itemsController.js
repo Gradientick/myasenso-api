@@ -13,13 +13,13 @@ async function getItems(req, res) {
   return res.status(200).json(items);
 }
 
-async function getItem(req, res, next) {
+async function getItem(req, res) {
   try {
     const id = req.params.id;
     const item = await Item.findById(id);
     return res.status(200).json(item);
   } catch (error) {
-    next(error);
+    console.log(error);
     return res.status(404).json({ error: "item not found" });
   }
 }
